@@ -1,0 +1,95 @@
+#########################################
+# 🌐 Angular Ignore Rules
+#########################################
+# Node modules
+node_modules/
+
+# Compiled output
+dist/
+build/
+
+# Angular build artifacts
+*.log
+*.tsbuildinfo
+.angular/
+
+# IDE/editor folders
+.vscode/
+.idea/
+
+# Environment files (keep sensitive info out of version control)
+src/environments/*.ts
+!src/environments/environment.prod.ts
+
+#########################################
+# 🧱 ASP.NET Core Ignore Rules
+#########################################
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider/Visual Studio
+.idea/
+.vscode/
+*.swp
+*.sln*
+*.csproj.user
+*.dbmdl
+
+# Dotnet publish output
+publish/
+out/
+
+# Auto-generated database files
+*.mdf
+*.ldf
+
+# Secrets and config
+appsettings.Development.json
+secrets.json
+
+#########################################
+# 🚀 Docker / Deployment Artifacts (Optional)
+#########################################
+docker-compose.override.yml
+*.log
+*.pid
+*.gz
+*.tar
+*.tgz
+
+#########################################
+# 🌍 OS-Specific
+#########################################
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+#########################################
+# 🧪 Testing
+#########################################
+coverage/
+*.lcov
+
+#########################################
+# ✨ Misc
+#########################################
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.local
+.env.*.local
