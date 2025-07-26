@@ -1,3 +1,5 @@
+using API_ElasticSearch.Services;
+using Elastic.Clients.Elasticsearch;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
@@ -13,13 +15,21 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
-
         builder.Services.AddControllers();
+        ConfigureElasticsearchClientService(builder);
+        builder.Services.AddScoped<IBookSearchService, BookSearchService>();
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
-
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("LocalCorsPolicy", policy =>
+            {
+                policy
+                    .WithOrigins(("http://localhost:4200"))
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -30,11 +40,23 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        app.UseAuthorization();
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseCors("LocalCorsPolicy");
+        }
+        
+        
 
 
         app.MapControllers();
-
+        
         app.Run();
+    }
+    
+    private static void ConfigureElasticsearchClientService(WebApplicationBuilder builder)
+    {
+        var settings = new ElasticsearchClientSettings(new Uri("http://localhost:9200"));
+        var client = new ElasticsearchClient(settings);
+        builder.Services.AddSingleton(client);
     }
 }
