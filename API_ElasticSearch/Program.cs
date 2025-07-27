@@ -40,11 +40,7 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseCors("LocalCorsPolicy");
-        }
-        
+        app.UseCors("LocalCorsPolicy");
         
 
 
@@ -55,7 +51,8 @@ public class Program
     
     private static void ConfigureElasticsearchClientService(WebApplicationBuilder builder)
     {
-        var settings = new ElasticsearchClientSettings(new Uri("http://localhost:9200"));
+        var elasticSearchHost = Environment.GetEnvironmentVariable("ELASTIC_SEARCH_HOST") ?? "localhost";
+        var settings = new ElasticsearchClientSettings(new Uri($"http://{elasticSearchHost}:9200"));
         var client = new ElasticsearchClient(settings);
         builder.Services.AddSingleton(client);
     }
