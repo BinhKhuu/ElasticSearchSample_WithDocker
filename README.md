@@ -1,6 +1,6 @@
 ### WEB
 1. Start ```ng serve```
-
+2. 
 ### Docker
 - Angular web project uses localhost:4200
 - ASP.NET api exposes 5103 or 7176
