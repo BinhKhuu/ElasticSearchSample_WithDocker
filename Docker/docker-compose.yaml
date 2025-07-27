@@ -1,0 +1,31 @@
+services:
+  elasticSearch:
+    image: elastic/elasticsearch:8.18.4
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+  
+  api:
+    build:
+        context: ../
+        dockerfile: API_ElasticSearch/Dockerfile
+    ports: 
+      - "5103:8080"
+      - "7176:8080"
+    depends_on:
+      - elasticSearch
+    environment:
+      - ELASTIC_SEARCH_HOST=elasticSearch
+    develop:
+      watch:
+        - action: rebuild
+          path: ../API_ElasticSearch
+          target: /src/API_ElasticSearch
+
+volumes:
+  esdata:
