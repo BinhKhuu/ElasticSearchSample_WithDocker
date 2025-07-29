@@ -36,16 +36,11 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.UseCors("LocalCorsPolicy");
         }
 
         app.UseHttpsRedirection();
-
-        app.UseCors("LocalCorsPolicy");
-        
-
-
         app.MapControllers();
-        
         app.Run();
     }
     

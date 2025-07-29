@@ -9,16 +9,19 @@ services:
       - "9200:9200"
     volumes:
       - esdata:/usr/share/elasticsearch/data
-  
+    profiles: [api]
   api:
     build:
         context: ../
         dockerfile: API_ElasticSearch/Dockerfile
+        args:
+          BUILD_CONFIGURATION: ${BUILD_CONFIGURATION}
     ports: 
       - "5103:8080"
       - "7176:8080"
     depends_on:
       - elasticSearch
+    profiles: [api]
     environment:
       - ELASTIC_SEARCH_HOST=elasticSearch
     develop:

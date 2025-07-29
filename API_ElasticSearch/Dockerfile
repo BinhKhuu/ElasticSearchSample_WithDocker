@@ -5,7 +5,7 @@ EXPOSE 8080
 EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-ARG BUILD_CONFIGURATION=Release
+ARG BUILD_CONFIGURATION=$BUILD_CONFIGURATION
 WORKDIR /src
 COPY ["API_ElasticSearch/API_ElasticSearch.csproj", "API_ElasticSearch/"]
 RUN dotnet restore "API_ElasticSearch/API_ElasticSearch.csproj"
@@ -14,7 +14,7 @@ WORKDIR "/src/API_ElasticSearch"
 RUN dotnet build "API_ElasticSearch.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
+ARG BUILD_CONFIGURATION=$BUILD_CONFIGURATION
 RUN dotnet publish "API_ElasticSearch.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
