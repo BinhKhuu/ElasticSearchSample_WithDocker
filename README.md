@@ -15,10 +15,11 @@ docker compose will start the api and elastic search project
 - ndjson delimiters do not have an index using the POST URL to define the index 'book'
 
 ### Docker watch
-In /Docker run ```BUILD_CONFIGURATION=Development docker compose watch``` 
+In /Docker run ```BUILD_CONFIGURATION=Development docker compose --profile api watch``` 
 * watching for changes on the api project
 * rebuilds on change
 * BUILD_CONFIGURATION determines if you build in Release or Development on the .NET project
+* Currently one one profile active (api)
 
 # Todo
 1. When running docker watch put the build in development currently it runs release for all composes
