@@ -10,6 +10,7 @@ services:
     volumes:
       - esdata:/usr/share/elasticsearch/data
     profiles: [api]
+    
   api:
     build:
         context: ../
@@ -29,6 +30,18 @@ services:
         - action: rebuild
           path: ../API_ElasticSearch
           target: /src/API_ElasticSearch
+          
+  web:
+    build:
+      context: ../WEB_ElasticSearch
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    develop:
+      watch:
+        - action: rebuild
+          path: ../WEB_ElasticSearch
+          target: /app
 
 volumes:
   esdata:
