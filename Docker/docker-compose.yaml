@@ -17,6 +17,7 @@ services:
         dockerfile: API_ElasticSearch/Dockerfile
         args:
           BUILD_CONFIGURATION: ${BUILD_CONFIGURATION}
+          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
     ports: 
       - "5103:8080"
       - "7176:8080"
@@ -25,6 +26,7 @@ services:
     profiles: [api]
     environment:
       - ELASTIC_SEARCH_HOST=elasticSearch
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
     develop:
       watch:
         - action: rebuild
