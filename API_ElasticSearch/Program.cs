@@ -25,7 +25,9 @@ public class Program
             options.AddPolicy("LocalCorsPolicy", policy =>
             {
                 policy
-                    .WithOrigins(("http://localhost:4200"))
+                    .WithOrigins(
+                        "http://localhost:4200",
+                        "http://web:4200")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
@@ -36,9 +38,8 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
-            
+            app.UseCors("LocalCorsPolicy");
         }
-        app.UseCors("LocalCorsPolicy");
         app.UseHttpsRedirection();
         app.MapControllers();
         app.Run();

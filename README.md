@@ -15,12 +15,25 @@ docker compose will start the api and elastic search project
 - ndjson delimiters do not have an index using the POST URL to define the index 'book'
 
 ### Docker watch
-In /Docker run ```BUILD_CONFIGURATION=Development docker compose --profile api watch``` 
+In /Docker run ```BUILD_CONFIGURATION=Development ASPNETCORE_ENVIRONMENT=Development docker compose --profile api watch``` 
 * watching for changes on the api project
 * rebuilds on change
 * BUILD_CONFIGURATION determines if you build in Release or Development on the .NET project
 * Currently one one profile active (api)
 
+### Refresh image
+Build API profiles
+
+``` BUILD_CONFIGURATION=Development ASPNETCORE_ENVIRONMENT=Development docker compose build api --no-cache ```
+
+Build no profiles
+
+``` BUILD_CONFIGURATION=Development ASPNETCORE_ENVIRONMENT=Development docker compose build --no-cache ```
+
+Run the up/watch commands
+``` BUILD_CONFIGURATION=Development ASPNETCORE_ENVIRONMENT=Development docker compose up api --force-recreate -d ```
+``` BUILD_CONFIGURATION=Development ASPNETCORE_ENVIRONMENT=Development docker compose up --force-recreate -d ```
+``` BUILD_CONFIGURATION=Development ASPNETCORE_ENVIRONMENT=Development docker compose --profile api watch ```
 # Todo
 1. When running docker watch put the build in development currently it runs release for all composes
 2. Add angular web app to docker
