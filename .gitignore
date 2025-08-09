@@ -38,9 +38,10 @@ obj/
 .idea/
 .vscode/
 *.swp
-*.sln*
 *.csproj.user
 *.dbmdl
+.env
+push-main.json
 
 # Dotnet publish output
 publish/

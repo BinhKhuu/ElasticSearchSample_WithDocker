@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  pull_request: 
+    branches: [main]
+  workflow_dispatch: 
+    
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    services:
+      elasticsearch:
+        image: elastic/elasticsearch:8.18.4
+        ports:
+          - "9200:9200"
+        env:
+          discovery.type: single-node
+          xpack.security.enabled: false
+          ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+        options: >-
+          --health-cmd="curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"'"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Wait for Elasticsearch to be ready
+        run: |
+          echo "Waiting for Elasticsearch..."
+          for i in {1..30}; do
+            curl -s http://localhost:9200 && break
+            sleep 2
+          done
+
+      - name: Check Elasticsearch is running on port 9200
+        run: |
+          # Replace this with your actual test command
+          curl -X GET http://localhost:9200
+      
+      - name: Create Index
+        run: |
+          curl -X PUT "http://localhost:9200/book"
+                  
+      - name: Seed Elasticsearch with a single document
+        run: |
+          curl -X POST "http://localhost:9200/book/_doc" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "title": "Unlocking Android",
+              "isbn": "1933988673",
+              "pageCount": 416,
+              "thumbnailUrl": "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/ableson.jpg",
+              "shortDescription": "ugh",
+              "longDescription": "ugh",
+              "status": "PUBLISH",
+              "authors": "W. Frank Ableson, Charlie Collins, Robi Sen",
+              "categories": "Open Source, Mobile"
+            }'
+          
+      - name: Seed Elasticsearch with ndjson
+        run: |
+          curl -X POST "http://localhost:9200/book/_bulk" \
+            -H "Content-Type: application/x-ndjson" \
+            --data-binary @data/books.ndjson
+ 
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.304'
+
+      - name: Test elasticsearch has book index and seeded data
+        run: |
+          result=$(curl -s -X POST "http://localhost:9200/book/_search" -H "Content-Type: application/json" -d '{
+            "query": {
+              "match_all": {}
+            }
+          }')         
+          echo "$result"
+          
+      - name: 💾 Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+            
+      - name: 🕵️ List files in workspace
+        run: ls -R
+
+      - name: 📦 Restore dependencies
+        run: dotnet restore ElasticSearch_Sample2.sln
+
+      - name: 🛠️ Build solution
+        run: dotnet build ElasticSearch_Sample2.sln --no-restore --configuration Release
+
+      - name: 🧪 Run tests
+        run: dotnet test ./TEST_ElasticSearch/TEST_ElasticSearch.csproj --no-build --configuration Release --logger "console;verbosity=normal"

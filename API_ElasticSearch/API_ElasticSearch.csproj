@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
+        <PreserveCompilationContext>true</PreserveCompilationContext>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>aspnet-API_ElasticSearch-7e7a1749-b214-4f5f-9c17-fbf7feaa75f0</UserSecretsId>
