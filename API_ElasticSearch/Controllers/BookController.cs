@@ -28,6 +28,7 @@ namespace API_ElasticSearch.Controllers
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<Book>>> Get(string query)
         {
+            Console.WriteLine(query);
             var books = await _bookSearchService.GetBooksAsync(query);
             return Ok(books);
         }

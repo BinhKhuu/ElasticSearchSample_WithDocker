@@ -34,6 +34,19 @@ Run the up/watch commands
 ``` BUILD_CONFIGURATION=Development ASPNETCORE_ENVIRONMENT=Development docker compose up api --force-recreate -d ```
 ``` BUILD_CONFIGURATION=Development ASPNETCORE_ENVIRONMENT=Development docker compose up --force-recreate -d ```
 ``` BUILD_CONFIGURATION=Development ASPNETCORE_ENVIRONMENT=Development docker compose --profile api watch ```
+
+# Act 
+Pipeline testing, pushing to main
+```
+act push -e push-main.json
+```
+- push-main.json simulates git payload
+```json
+{
+    "ref": "refs/heads/main"
+}
+```
+
 # Todo
 1. When running docker watch put the build in development currently it runs release for all composes
 2. Add angular web app to docker
