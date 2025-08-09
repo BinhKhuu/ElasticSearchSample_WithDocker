@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, unittesting]
+    branches: [main]
   pull_request: 
-    branches: [main, unittesting]
+    branches: [main]
   workflow_dispatch: 
     
 jobs:
@@ -62,11 +62,16 @@ jobs:
               "categories": "Open Source, Mobile"
             }'
           
-#      - name: Seed Elasticsearch with ndjson
-#        run: |
-#          curl -X POST "http://localhost:9200/book/_bulk" \
-#            -H "Content-Type: application/x-ndjson" \
-#            --data-binary @data/books.ndjson
+      - name: Seed Elasticsearch with ndjson
+        run: |
+          curl -X POST "http://localhost:9200/book/_bulk" \
+            -H "Content-Type: application/x-ndjson" \
+            --data-binary @data/books.ndjson
+ 
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.304'
 
       - name: Test elasticsearch has book index and seeded data
         run: |
@@ -76,11 +81,6 @@ jobs:
             }
           }')         
           echo "$result"
-          
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.0.x'
           
       - name: 💾 Cache NuGet packages
         uses: actions/cache@v3
